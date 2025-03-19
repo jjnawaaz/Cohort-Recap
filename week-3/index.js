@@ -1,17 +1,20 @@
 const express = require("express");
 const app = express();
 const fs = require("fs");
+const cors = require("cors");
 
 app.use(express.json());
+app.use(cors());
 
-// Create Users
+// Create Todo
 app.post("/", (req, res) => {
   fs.readFile("todos.json", "utf-8", (err, data) => {
     if (err) throw err;
     let todos = JSON.parse(data);
     let newTodo = {
       id: req.body.id,
-      name: req.body.name,
+      todo: req.body.todo,
+      description: req.body.description,
     };
     todos.push(newTodo);
     fs.writeFile("todos.json", JSON.stringify(todos), (err, data) => {
@@ -41,7 +44,8 @@ app.put("/:id", (req, res) => {
       if (element.id == id) {
         todos[idx] = {
           id: updatedTodo.id || element.id,
-          name: updatedTodo.name || element.name,
+          todo: updatedTodo.todo || element.todo,
+          description: updatedTodo.description || element.description,
         };
       }
     });
@@ -52,7 +56,7 @@ app.put("/:id", (req, res) => {
   });
 });
 
-// get User By id
+// get Todo By id
 app.get("/:id", (req, res) => {
   let id = parseInt(req.params.id);
   fs.readFile("todos.json", "utf-8", (err, data) => {

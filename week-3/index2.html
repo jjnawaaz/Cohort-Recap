@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    Todo
+    <input type="text" id="todo" />
+    Description
+    <input type="text" id="description" />
+    <button onclick="onSubmit()" type="button">Submit</button>
+    <div id="mainArea"></div>
+    <script>
+      // Delete Todo
+
+      function deleteResp() {
+        console.log("Deleted successfully");
+      }
+      function deleteTodo(id) {
+        console.log(id);
+        fetch(`http://localhost:3000/${id}`, {
+          method: "DELETE",
+        }).then(deleteResp);
+      }
+
+      // Get todos
+      function getDataResp(data) {
+        console.log(data);
+        // get main area
+        var parentElement = document.getElementById("mainArea");
+        parentElement.innerHTML = "";
+        for (let i = 0; i < data.length; i++) {
+          var childElement = document.createElement("div");
+          var grandChildElement1 = document.createElement("span");
+          var grandChildElement2 = document.createElement("span");
+          var grandChildElement3 = document.createElement("button");
+
+          grandChildElement1.innerHTML = data[i].todo;
+          grandChildElement2.innerHTML = data[i].description;
+
+          grandChildElement3.innerHTML = "Delete";
+          grandChildElement3.setAttribute(
+            "onclick",
+            "deleteTodo(" + data[i].id + ")"
+          );
+          childElement.appendChild(grandChildElement1);
+          childElement.appendChild(grandChildElement2);
+          childElement.appendChild(grandChildElement3);
+          parentElement.appendChild(childElement);
+        }
+      }
+      function getData(data) {
+        data.json().then(getDataResp);
+      }
+      function getTodos() {
+        fetch("http://localhost:3000/", {
+          method: "GET",
+        }).then(getData);
+      }
+
+      getTodos();
+      // Post Todos
+      function postDataResp(data) {
+        console.log(data);
+      }
+
+      function postData(data) {
+        data.json().then(postDataResp);
+      }
+
+      function onSubmit() {
+        let id = Math.floor(Math.random() * 100) + 1;
+        let todo = document.getElementById("todo").value;
+        let description = document.getElementById("description").value;
+        console.log(id, todo, description);
+        fetch("http://localhost:3000/", {
+          method: "POST",
+          body: JSON.stringify({
+            id: id,
+            todo: todo,
+            description: description,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then(postData);
+      }
+    </script>
+  </body>
+</html>

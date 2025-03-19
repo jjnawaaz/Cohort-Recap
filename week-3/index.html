@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TODO App</title>
+  </head>
+  <script>
+    function deleteFunction(data1) {
+      var parentElement = document.getElementById("mainArea");
+      for (let i = 0; i < data1.length; i++) {
+        var childElement = document.createElement("div");
+        var grandchildElement1 = document.createElement("span");
+        var grandchildElement2 = document.createElement("span");
+        var grandchildElement3 = document.createElement("button");
+        grandchildElement1.innerHTML = data1[i].todo;
+        grandchildElement2.innerHTML = data1[i].description;
+        grandchildElement3.innerHTML = "Delete";
+        grandchildElement3.setAttribute(
+          "onclick",
+          "deleteTodo(" + data1[i].id + ")"
+        );
+        childElement.appendChild(grandchildElement1);
+        childElement.appendChild(grandchildElement2);
+        childElement.appendChild(grandchildElement3);
+
+        parentElement.appendChild(childElement);
+      }
+    }
+    function deleteTodo(id) {
+      console.log(id);
+      fetch(`http://localhost:3000/${id}`, {
+        method: "DELETE",
+      }).then(deleteFunction);
+    }
+
+    function getResponse(data1) {
+      console.log(data1);
+      var parentElement = document.getElementById("mainArea");
+      for (let i = 0; i < data1.length; i++) {
+        var childElement = document.createElement("div");
+        var grandchildElement1 = document.createElement("span");
+        var grandchildElement2 = document.createElement("span");
+        var grandchildElement3 = document.createElement("button");
+        grandchildElement1.innerHTML = data1[i].todo;
+        grandchildElement2.innerHTML = data1[i].description;
+        grandchildElement3.innerHTML = "Delete";
+        grandchildElement3.setAttribute(
+          "onclick",
+          "deleteTodo(" + data1[i].id + ")"
+        );
+        childElement.appendChild(grandchildElement1);
+        childElement.appendChild(grandchildElement2);
+        childElement.appendChild(grandchildElement3);
+
+        parentElement.appendChild(childElement);
+      }
+    }
+
+    function callbackFn1(data) {
+      data.json().then(getResponse);
+    }
+
+    function getData() {
+      fetch("http://localhost:3000/", {
+        method: "GET",
+      }).then(callbackFn1);
+    }
+
+    getData();
+
+    function responseData(data) {
+      console.log(data);
+      getData();
+    }
+    function callBackfn(data) {
+      data.json().then(responseData);
+    }
+
+    function onPress() {
+      var todo = document.getElementById("todo").value;
+      var description = document.getElementById("description").value;
+      var id = document.getElementById("id").value;
+      console.log(todo, description, id);
+
+      fetch("http://localhost:3000/", {
+        method: "POST",
+        body: JSON.stringify({
+          id: id,
+          todo: todo,
+          description: description,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then(callBackfn);
+    }
+  </script>
+  <body>
+    Todo id
+    <input type="text" id="id" /><br /><br />
+    Todo Title
+    <input type="text" id="todo" />
+    <br /><br />
+    Todo Description
+    <input type="text" id="description" />
+    <button onclick="onPress()">Submit</button>
+    <div id="mainArea"></div>
+  </body>
+</html>
