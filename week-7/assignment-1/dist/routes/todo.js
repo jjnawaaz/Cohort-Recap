@@ -7,8 +7,10 @@ const express_1 = __importDefault(require("express"));
 const index_1 = require("../middleware/index");
 const db_1 = require("../db");
 const router = express_1.default.Router();
+// router.use(authenticateJwt)  ---> can use this without repeting it in controllers
 router.post("/todos", index_1.authenticateJwt, (req, res) => {
     const { title, description } = req.body;
+    console.log(title, description);
     const done = false;
     const userId = req.headers.id;
     const newTodo = new db_1.Todo({ title, description, done, userId });

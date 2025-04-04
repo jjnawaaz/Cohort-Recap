@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-
 import "./App.css";
 import { RecoilRoot, useSetRecoilState } from "recoil";
 import {
@@ -15,19 +14,17 @@ import { authState } from "./store/authState";
 
 function App() {
   return (
-    <>
-      <RecoilRoot>
-        <Router>
-          <InitState />
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/" element={<Login />} />
-            <Route path="/todos" element={<TodoList />} />
-          </Routes>
-        </Router>
-      </RecoilRoot>
-    </>
+    <RecoilRoot>
+      <Router>
+        <InitState />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/todos" element={<TodoList />} />
+        </Routes>
+      </Router>
+    </RecoilRoot>
   );
 }
 
@@ -43,20 +40,20 @@ function InitState() {
         },
       });
       const data = await response.json();
-      if (data) {
+      if (data.username) {
         atomData({ username: data.username, token: data.token });
         navigate("/todos");
       } else {
         navigate("/login");
       }
     } catch (e) {
-      navigate("/login");
+      console.log(e);
     }
-    useEffect(() => {
-      init();
-    }, []);
   };
-  return <></>;
+  useEffect(() => {
+    init();
+  }, []);
+  return null;
 }
 
 export default App;

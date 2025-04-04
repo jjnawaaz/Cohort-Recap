@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.post("/todos", authenticateJwt, (req: Request, res: Response) => {
   const { title, description } = req.body;
+  console.log(title, description);
   const done = false;
   const userId = req.headers.id;
 

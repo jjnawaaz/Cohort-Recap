@@ -15,10 +15,10 @@ const authenticateJwt = (req, res, next) => {
             if (err) {
                 return res.sendStatus(403);
             }
-            console.log(payload);
             const user = payload;
             if (user === null || user === void 0 ? void 0 : user.id) {
                 req.headers.id = user.id;
+                req.headers.token = token;
                 next();
             }
             else {

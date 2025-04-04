@@ -1,54 +1,50 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
+type LoginData = {
+  username: string;
+  password: string;
+};
 
 const Login = () => {
-  const [username, setUsername] = useState();
-  const [password, setPassword] = useState();
-  const navigate = useNavigate();
-
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const handleClick = async () => {
+    const userData: LoginData = {
+      username: username,
+      password: password,
+    };
     const response = await fetch("http://localhost:3000/auth/login", {
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
+      method: "POST",
+      body: JSON.stringify(userData),
+      headers: {
+        "Content-type": "application/json",
+      },
     });
     const data = await response.json();
-    if (data) {
+    if (data.token) {
       localStorage.setItem("token", data.token);
-      navigate("/todos");
+      window.location = "/todos";
     } else {
       alert("Invalid Credentials");
     }
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: "red",
-        display: "flex",
-        justifyContent: "center",
-      }}
-    >
+    <div>
+      <h1>Login</h1>
       <div>
-        <br />
-        <br />
         <input
-          type="Username"
-          placeholder="username"
+          type="text"
+          placeholder="Email"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-        <br />
-        <br />
-        <br />
         <input
           type="password"
-          placeholder="password"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <br />
-        <br />
-        <br />
         <button onClick={handleClick}>Login</button>
       </div>
     </div>

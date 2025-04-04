@@ -41,9 +41,10 @@ router.post(
 
 router.get("/me", authenticateJwt, async (req: Request, res: Response) => {
   const id = req.headers.id;
+  const token = req.headers.token;
   const user = await User.findOne({ _id: id });
   if (user) {
-    res.json({ username: user.username });
+    res.json({ username: user.username, token: token });
   } else {
     res.status(403).json({ message: "User not logged in" });
   }

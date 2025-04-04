@@ -43,9 +43,10 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
 }));
 router.get("/me", index_1.authenticateJwt, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.headers.id;
+    const token = req.headers.token;
     const user = yield db_1.User.findOne({ _id: id });
     if (user) {
-        res.json({ username: user.username });
+        res.json({ username: user.username, token: token });
     }
     else {
         res.status(403).json({ message: "User not logged in" });

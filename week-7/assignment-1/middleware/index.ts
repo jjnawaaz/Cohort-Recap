@@ -10,10 +10,10 @@ const authenticateJwt = (req: Request, res: Response, next: NextFunction) => {
       if (err) {
         return res.sendStatus(403);
       }
-      console.log(payload);
       const user = payload as jwt.JwtPayload;
       if (user?.id) {
         req.headers.id = user.id;
+        req.headers.token = token;
         next();
       } else {
         res.sendStatus(401);
